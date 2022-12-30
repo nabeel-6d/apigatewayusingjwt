@@ -19,28 +19,36 @@ import com.example.apigatewayusingjwt.jwtSecurity.services.MyUserDetailsService;
 @EnableWebSecurity
 public class JwtConfigurer extends WebSecurityConfigurerAdapter{
 
+    
     @Autowired
-    private MyUserDetailsService uService;
+    private MyUserDetailsService userService;
 
     @Autowired
     private JwtCustomFilter jwtCustomFilter;
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(uService);
-    }
 
     @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        System.out.println("in configure AuthenticationManagerBuilder() ------------------------------>");
+        auth.userDetailsService(userService);
+        System.out.println("my user service is "+userService);
+        System.out.println();
+    }
+     
+    @Override
     @Bean
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        System.out.println("in configure authenticationManager-Bean() ------------------------------>");
+        return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/authenticate").permitAll().anyRequest().authenticated()
-        .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtCustomFilter,UsernamePasswordAuthenticationFilter.class);
+        System.out.println("in configure HttpSecurity() ------------------------------>");
+        http.csrf().disable()
+        .authorizeRequests().antMatchers("/authenticate").permitAll()
+        .anyRequest().authenticated().and().formLogin().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and().addFilterBefore(jwtCustomFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
+    
     
 }

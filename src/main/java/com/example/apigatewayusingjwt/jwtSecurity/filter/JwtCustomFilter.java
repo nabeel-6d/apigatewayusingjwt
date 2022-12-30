@@ -56,13 +56,16 @@ public class JwtCustomFilter extends OncePerRequestFilter{
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("in customFilter method() ------------------------------------------");
         String authorization=request.getHeader("Authorization");
         String token=null;
         String username=null;
 
         if(authorization !=null && authorization.startsWith("Bearer ")){
             token=authorization.substring(7);
-            username=utility.getUserNameFromToken(token);
+            username=utility.getUsernameFromToken(token);
+            System.out.println("request body has :"+username+" token value is"+token);
+            System.out.println();
         }
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails=userDetailsService.loadUserByUsername(username);
@@ -70,7 +73,7 @@ public class JwtCustomFilter extends OncePerRequestFilter{
                 UsernamePasswordAuthenticationToken upat=new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
 
                 upat.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
+                //SecurityContextHolder.createEmptyContext();
                 SecurityContextHolder.getContext().setAuthentication(upat);
             }
         }

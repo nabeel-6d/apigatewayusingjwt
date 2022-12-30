@@ -21,4 +21,5 @@ public class ApigatewayusingjwtApplication {
     public PasswordEncoder getPasswordEncoder(){
         return NoOpPasswordEncoder.getInstance();
     }
+	
 }

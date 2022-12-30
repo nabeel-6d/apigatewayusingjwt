@@ -29,3 +29,25 @@ spring:
     main: 
       web-application-type: 
                       reactive
+      allow-bean-definition-overriding: true
+    datasource:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/plan_model
+      username: root
+      password: nabeel
+    jpa:
+        hibernate.ddl-auto: update
+        generate-ddl: true
+        show-sql: true
+    
+    #eureka.client.service-url.default-zone
+eureka:
+      client:
+        service-url:
+          default-zone: http://localhost:8761/eureka
+      instance:
+        instance-id: ${spring.application.name}:${random.value}
+
+csrf:
+  protection:
+    enabled: false
